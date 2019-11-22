@@ -1,0 +1,42 @@
+/* animations */
+@-webkit-keyframes sunset-gradient {
+    0%{background-position:0% 9%}
+    50%{background-position:100% 92%}
+    100%{background-position:0% 9%}
+}
+@-moz-keyframes sunset-gradient {
+    0%{background-position:0% 9%}
+    50%{background-position:100% 92%}
+    100%{background-position:0% 9%}
+}
+@keyframes sunset-gradient {
+    0%{background-position:0% 9%}
+    50%{background-position:100% 92%}
+    100%{background-position:0% 9%}
+}
+
+.app-header {
+    transition: all .5s;
+}
+
+.gradient-text {
+    background: linear-gradient(94deg, #833ab4, #fd1d1d, #fcb045, #833ab4);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 1800% 1800%;
+    animation: sunset-gradient 10s ease infinite;
+  }
+
+#app-header {
+    /* background: linear-gradient(90deg, #833ab4 0%, #fd1d1d 84%, #fcb045 100%); */
+    background: linear-gradient(94deg, #833ab4, #fd1d1d, #fcb045, #833ab4);
+    background-size: 800% 800%;
+
+    -webkit-animation: sunset-gradient 31s ease infinite;
+    -moz-animation: sunset-gradient 31s ease infinite;
+    animation: sunset-gradient 60s ease infinite;
+}
+
+/* sunset purple */
+/* background: linear-gradient(90deg, #39375b, #745c97, #d597ce, #f5b0cb); */

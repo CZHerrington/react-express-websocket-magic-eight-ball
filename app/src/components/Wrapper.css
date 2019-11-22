@@ -1,0 +1,8 @@
+.container .wrapper {
+	/* margin: 100px auto; */
+}
+
+.wrapper {
+	transition: all 0.5s;
+	padding-top: 20px;
+}

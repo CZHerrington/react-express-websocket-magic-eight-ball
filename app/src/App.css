@@ -1,0 +1,18 @@
+.App {
+  min-height: 120vh;
+  background-color: #535353;
+}
+
+a {
+  transition: all .25s;
+  color: #09d3ac;
+}
+a:hover {
+  transition: all .25s;
+  color: #0cf1c3;
+}
+
+
+.App-link {
+  color: #09d3ac;
+}

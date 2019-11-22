@@ -1,7 +1,7 @@
 {
-  "name": "Socket-Chat-Example",
+  "name": "Magic Eight Ball Server",
   "description": "my first socket.io app",
-  "website": "https://github.com/socketio/chat-example",
+  "website": "https://github.com/CZHerrington/",
   "repository": "https://github.com/socketio/chat-example",
   "logo": "https://node-js-sample.herokuapp.com/node.svg",
   "success_url": "/",

@@ -1,0 +1,114 @@
+/*
+### brand colors ###
+darkest: #313131
+dark: #414141
+light: #525252
+*/
+/* imports */
+@import url("https://fonts.googleapis.com/css?family=Heebo:100,300,400,500|Nunito|Open+Sans:300,400,600|Quicksand|Roboto|Rubik&display=swap");
+
+/* animations */
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* styles */
+.eightball {
+	height: 45vh;
+}
+
+.card > .header {
+	/* font-family: 'Roboto', sans-serif;
+    font-family: 'Muli', sans-serif;
+    font-family: 'Nunito', sans-serif;
+    font-family: 'Rubik', sans-serif;
+    font-family: 'Quicksand', sans-serif;
+    font-family: 'Heebo', sans-serif; */
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	box-shadow: none;
+	background-color: #525252;
+	min-height: 64px;
+}
+
+.card > .header > .card-header-title {
+	color: white;
+	/* font-family: 'Rubik', sans-serif; */
+	font-weight: 500;
+	font-size: 20px;
+}
+
+.eightball-icon {
+	transition: all 0.5s;
+}
+
+.eightball-icon--spin {
+	animation: spin 0.75s ease-in-out 0s 1;
+}
+
+.wrapper > .card {
+	transform: translateY(-105px);
+	margin: 0 auto;
+	width: 50vw;
+	min-width: 400px;
+	box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
+		0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+	transition: all 0.5s;
+	border-radius: 10px;
+	background-color: #414141;
+}
+
+.wrapper > .card:hover {
+	box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.25),
+		0 18px 36px -18px rgba(0, 0, 0, 0.3), 0 -12px 36px -8px rgba(0, 0, 0, 0.025);
+	transition: all 0.5s;
+	transform: translateY(-115px);
+}
+
+@media screen and (max-width: 768px) {
+	.wrapper > .card {
+		transform: translateY(-25px);
+	}
+	.wrapper > .card:hover {
+		transform: translateY(-30px);
+	}
+}
+
+.card > .card-footer {
+	background-color: #525252;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	border: none;
+}
+
+.card label {
+	color: white;
+}
+
+.media-content > .title {
+	color: white;
+}
+
+.media-content > .subtitle {
+	color: rgb(165, 165, 165);
+}
+
+input.question {
+	color: white;
+	transition: all 0.25s;
+	background: #313131;
+	border: none;
+}
+
+input.question::placeholder {
+	color: #b8b8b8;
+}
+
+.control > button {
+	transition: all 0.25s;
+}

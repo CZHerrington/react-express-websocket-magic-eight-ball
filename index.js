@@ -1,18 +1,37 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var port = process.env.PORT || 3000;
+const path = require('path')
+const express = require('express');
+const app = express();
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
+const dotenv = require('dotenv').config;
+const MemDB = require('./models/db');
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
+const port = process.env.PORT || 8000;
+const appUrl = process.env.APP_URL;
 
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
+app.use('/', express.static(path.join(__dirname, 'app/build')))
+
+io.on("connection", socket => {
+  let memDb = new MemDB(socket);
+
+  socket.on("user-connected", data => {
+    memDb.addUser(data);
+    // memDb.updateConnections();
+
+    console.log("user-connected:", data);
+    io.emit("user-connected", { ...data, users: memDb.get('connections') });
+  });
+  socket.on("question", msg => {
+    console.log(socket);
+    console.log("[question from]: " + socket.address, msg);
+    io.emit("question", msg);
+  });
+  socket.on("disconnect", data => {
+    memDb.updateConnections();
+    io.emit("user-update", { users: memDb.get('connections') });
   });
 });
 
-http.listen(port, function(){
-  console.log('listening on *:' + port);
+http.listen(port, () => {
+  console.log("listening on *:" + port);
 });
