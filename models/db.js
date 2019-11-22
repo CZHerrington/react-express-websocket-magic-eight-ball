@@ -13,18 +13,18 @@ module.exports = class MemDB {
 
   get(property) {
     const data = this.store[property];
-    console.log("[MemDB get]: " + property, this.store);
+    // console.log("[MemDB get]: " + property, this.store);
     return data || null;
   }
   updateConnections() {
-    const clients = this.socket.conn.server.clientsCount;
+    const clients = this.socket.engine.clientsCount;
     this.store.connections = clients;
-    console.log("[MemDB updateConnections]: ", this.store);
+    // console.log("[MemDB updateConnections]: ", this.store);
     return clients;
   }
   addUser(user) {
-    this.store.users[user.uuid] = { ...defaultUser, ...user };
+    this.store.users[user.uuid] = user;
     this.updateConnections();
-    console.log("[MemDB addUser]: ", this.store);
+    // console.log("[MemDB addUser]: ", this.store);
   }
 };

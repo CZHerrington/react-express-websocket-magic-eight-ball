@@ -11,18 +11,18 @@ const appUrl = process.env.APP_URL;
 
 app.use('/', express.static(path.join(__dirname, 'app/build')))
 
+
+let memDb = new MemDB(io);
 io.on("connection", socket => {
-  let memDb = new MemDB(socket);
 
   socket.on("user-connected", data => {
     memDb.addUser(data);
-    // memDb.updateConnections();
+    memDb.updateConnections();
 
     console.log("user-connected:", data);
     io.emit("user-connected", { ...data, users: memDb.get('connections') });
   });
   socket.on("question", msg => {
-    console.log(socket);
     console.log("[question from]: " + socket.address, msg);
     io.emit("question", msg);
   });

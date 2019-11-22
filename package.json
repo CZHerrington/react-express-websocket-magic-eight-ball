@@ -10,6 +10,6 @@
   "scripts": {
     "start": "node index.js",
     "app:build": "cd app; npm install; npm run build",
-    "app:dev": "cd app; npm start"
+    "dev": "cd app; npm start"
   }
 }
