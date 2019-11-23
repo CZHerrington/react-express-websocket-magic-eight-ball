@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "npm install; npm app:build",
+    "build": "npm install; npm run app:build",
     "app:build": "cd app; npm install; npm run build",
     "dev": "cd app; npm start"
   }
