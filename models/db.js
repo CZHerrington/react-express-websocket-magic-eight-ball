@@ -19,7 +19,7 @@ module.exports = class MemDB {
   updateConnections() {
     const clients = this.socket.engine.clientsCount;
     this.store.connections = clients;
-    // console.log("[MemDB updateConnections]: ", this.store);
+    // console.log("[MemDB updateConnections]: ", this.socket);
     return clients;
   }
   addUser(user) {
