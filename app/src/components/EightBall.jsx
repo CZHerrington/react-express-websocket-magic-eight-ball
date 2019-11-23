@@ -55,7 +55,7 @@ const EightBall = ({
 				level: level.warning,
 				position: position.top.right,
 				message: "input can't be empty",
-				title: "error!"
+				title: "error!",
 			});
 		}
 	};

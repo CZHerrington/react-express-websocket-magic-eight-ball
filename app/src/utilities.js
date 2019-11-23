@@ -1,4 +1,5 @@
 import io from "socket.io-client";
+import React from 'react';
 
 const socket_url = "/";
 const test = window.location;
@@ -25,21 +26,23 @@ export const position = {
 	}
 };
 
+const warning = {
+	string: 'it seems like you\'re calling createNotification(notification) without setting any non-default values!',
+	html: (<><br/>it seems like you're calling <strong>createNotification(</strong><i>notification</i><strong>)</strong> without setting any non-default values!</>)
+}
+
 export const defaultConfig = {
-	message: "default notification",
+	message: warning.html,
+	title: warning.string,
 	level: level.error,
-	position: position.top.left
+	position: position.top.left,
+	autoDismiss: 0
+	
 };
+
 
 export function createNotification(system) {
 	return notification => {
-		if (defaultConfig === { ...defaultConfig, ...notification }) {
-			notification.message +=
-				"<br>[ it seems like you're calling <strong>createNotification(<i>notification</i>)</strong> without setting any non-default values! ]";
-			console.warning(
-				"it seems like you're calling createNotification(notification) without setting any non-default values!"
-			);
-		}
 		system.current.addNotification({ ...defaultConfig, ...notification });
 	};
 }
