@@ -90,6 +90,10 @@ light: #525252
 	color: white;
 }
 
+.media {
+	min-height: 51px;
+}
+
 .media-content > .title {
 	color: white;
 }

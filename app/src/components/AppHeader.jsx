@@ -14,7 +14,7 @@ import "./AppHeader.css";
 const AppHeader = ({ children, title, subtitle, color, size }) => {
 	const isSize = size ? size : "medium";
 	return (
-		<Hero className="app-header" id="app-header" isSize={isSize}>
+		<Hero className="app-header" isSize={isSize}>
 			<HeroBody>
 				<Container hasTextAlign="centered">
 					<Title>{title}</Title>

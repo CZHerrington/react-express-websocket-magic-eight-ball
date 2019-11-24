@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
+import styled from 'styled-components';
+
 import EightBall from "./components/EightBall";
 import AppHeader from "./components/AppHeader";
 import Wrapper from "./components/Wrapper";
@@ -118,23 +120,22 @@ class App extends Component {
 	render() {
 		const { loading, question, answer, users } = this.state;
 
-		const titleStyle = { color: "white" };
-		const title = (
-			<span style={titleStyle}>
+		const TitleComponent = (
+			<Title>
 				Welcome to the <strong>Magic Eight Ball</strong>!
-			</span>
+			</Title>
 		);
-		const subtitle = (
-			<span style={titleStyle}>
+		const SubtitleComponent = (
+			<Title>
 				an app by <a href="https://www.github.com/CZHerrington">CZHerrington</a>
-			</span>
+			</Title>
 		);
 		return (
 			<div className="App">
 				<NotificationSystem ref={this.notificationSystem} />
 				<AppHeader
-					title={title}
-					subtitle={subtitle}
+					title={TitleComponent}
+					subtitle={SubtitleComponent}
 					color={"blue"}
 					size={"medium"}
 				/>
@@ -153,5 +154,10 @@ class App extends Component {
 		);
 	}
 }
+
+const Title = styled.span`
+	color: white;
+`;
+
 
 export default App;

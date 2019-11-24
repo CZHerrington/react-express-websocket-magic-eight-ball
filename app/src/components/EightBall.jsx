@@ -1,26 +1,21 @@
 import React, { useState } from "react";
 import {
-	Button,
-	Icon,
 	Field,
 	Control,
 	Input,
 	Help,
 	Content,
 	Card,
-	CardHeader,
-	CardFooter,
-	CardFooterItem,
 	CardContent,
 	Image,
-	CardHeaderTitle,
-	CardHeaderIcon,
 	Media,
 	MediaContent,
 	MediaLeft,
 	Title,
 	Subtitle
 } from "bloomer";
+import EightBallHeader from "./EightBallHeader";
+import EightBallFooter from "./EightBallFooter";
 import { level, position } from "../utilities";
 
 import "./EightBall.css";
@@ -55,12 +50,12 @@ const EightBall = ({
 				level: level.warning,
 				position: position.top.right,
 				message: "input can't be empty",
-				title: "error!",
+				title: "error!"
 			});
 		}
 	};
 
-	const clearAnswer = () => {
+	const handleClearAnswer = () => {
 		onClearAnswer();
 		setQuestionValue("");
 		setInputError({ error: false, message: "" });
@@ -75,13 +70,7 @@ const EightBall = ({
 
 	return (
 		<Card>
-			<CardHeader className="header">
-				<CardHeaderTitle>magic eight ball</CardHeaderTitle>
-				<CardHeaderIcon>
-					<Icon className="fa fa-angle-down" />
-					{users === 1 ? `${users} user online!` : `${users} users online!`}
-				</CardHeaderIcon>
-			</CardHeader>
+			<EightBallHeader users={users} title="magic eight ball" />
 			<CardContent>
 				<Media>
 					<MediaLeft
@@ -109,37 +98,17 @@ const EightBall = ({
 								value={questionValue}
 							/>
 							<Help isColor="danger">
-								{inputError.error ? inputError.message : ""}
+								{inputError.error ? inputError.message : " . "}
 							</Help>
 						</Control>
 					</Field>
 				</Content>
 			</CardContent>
-			<CardFooter>
-				<CardFooterItem tag="div">
-					<Field className="controls" isGrouped>
-						<Control>
-							<Button
-								// isOutlined
-								onClick={handleQuestionSubmit}
-								isLoading={loading}
-								isColor="primary"
-							>
-								Submit
-							</Button>
-						</Control>
-						<Control>
-							<Button
-								// isOutlined
-								isColor="danger"
-								onClick={clearAnswer}
-							>
-								Clear
-							</Button>
-						</Control>
-					</Field>
-				</CardFooterItem>
-			</CardFooter>
+			<EightBallFooter
+				handleClearAnswer={handleClearAnswer}
+				handleQuestionSubmit={handleQuestionSubmit}
+				loading={loading}
+			/>
 		</Card>
 		// </Wrapper>
 	);
