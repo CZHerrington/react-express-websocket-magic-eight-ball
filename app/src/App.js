@@ -61,17 +61,20 @@ class App extends Component {
 
 		this.socket.on(events.question, data => {
 			const { question, user } = data;
-			const formatQuestion = string =>
-				string[string.length - 1] !== "?" ? string + "?" : string;
-			this.createNotification({
-				title: `another user asked a question!`,
-				message: (
-					<div>
-						user <strong>{user}</strong> asked "
-						<em>{formatQuestion(question.question)}</em>"
-					</div>
-				)
-			});
+			if (user !== this.socket.uuid) {
+				const questionString =
+					question.question[question.question.length - 1] !== "?"
+						? question.question + "?"
+						: question.question;
+				this.createNotification({
+					title: `another user asked a question!`,
+					message: (
+						<div>
+							user <strong>{user}</strong> asked "<em>{questionString}</em>"
+						</div>
+					)
+				});
+			}
 		});
 
 		this.socket.on("user-update", data => {
