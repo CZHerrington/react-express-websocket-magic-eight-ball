@@ -22,9 +22,18 @@ module.exports = class MemDB {
     // console.log("[MemDB updateConnections]: ", this.socket);
     return clients;
   }
-  addUser(user) {
+  addUser(userData) {
+    const user = {
+      ...userData,
+      questions: []
+    }
     this.store.users[user.uuid] = user;
     this.updateConnections();
     // console.log("[MemDB addUser]: ", this.store);
+  }
+  addQuestion(data) {
+    const { user, question } = data;
+    const questions = [...this.store.users[user].questions, question];
+    this.store.users[user].questions = questions;
   }
 };

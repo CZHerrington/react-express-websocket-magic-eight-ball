@@ -11,8 +11,10 @@
   },
   "scripts": {
     "start": "node index.js",
-    "build": "npm install; npm run app:build",
+    "build": "npm run server:build; npm run app:build",
+    "dev": "npm run app:dev",
+    "server:build": "npm install",
     "app:build": "cd app; npm install; npm run build",
-    "dev": "cd app; npm start"
+    "app:dev": "cd app; npm start"
   }
 }
