@@ -98,7 +98,7 @@ const EightBall = ({
 								value={questionValue}
 							/>
 							<Help isColor="danger">
-								{inputError.error ? inputError.message : " . "}
+								{inputError.message}
 							</Help>
 						</Control>
 					</Field>
