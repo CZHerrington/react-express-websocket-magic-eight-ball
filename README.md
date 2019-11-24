@@ -3,8 +3,7 @@
 
 to deploy:
 (in project root directory)
-1. `npm run build`
-2. `npm start`
+1. `npm start`
 
 to develop:
 (in project root directory)
