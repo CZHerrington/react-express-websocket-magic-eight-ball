@@ -14,7 +14,7 @@ app.use("/", express.static(path.join(__dirname, "app/build")));
 
 // set up (very) basic JSON api
 app.use("/users", (req, res) => {
-  console.log("[json api]", { users: memDb.store.users });
+  // console.log("[json api]", { users: memDb.store.users });
   res.status(200).json({
     users: memDb.store.users
   });
@@ -22,7 +22,7 @@ app.use("/users", (req, res) => {
 
 app.use("/user/:id", (req, res) => {
   const { id } = req.params;
-  console.log("[json api]", { id, data: memDb.users });
+  // console.log("[json api]", { id, data: memDb.users });
   res.status(200).json({
     id,
     users: memDb.store.users
@@ -35,11 +35,11 @@ io.on("connection", socket => {
     memDb.addUser(data);
     memDb.updateConnections();
 
-    console.log("user-connected:", data);
+    console.log("user-connected!");
     io.emit("user-connected", { ...data, users: memDb.get("connections") });
   });
   socket.on("question", data => {
-    console.log("[question from]: " + data.user, data);
+    console.log("[question from]: " + data.user, data.question);
     memDb.addQuestion(data);
     io.emit("question", data);
   });
