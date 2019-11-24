@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import styled from 'styled-components';
+import styled from "styled-components";
 
 import EightBall from "./components/EightBall";
 import AppHeader from "./components/AppHeader";
@@ -11,7 +11,8 @@ import {
 	level,
 	position,
 	Socket,
-	uuidv4
+	uuidv4,
+	events
 } from "./utilities";
 
 /* styles */
@@ -48,14 +49,29 @@ class App extends Component {
 			console.log("[socket.io: event user-connected]", data);
 			if (data.uuid !== this.socket.uuid) {
 				this.createNotification({
-					position: position.top.right,
-					level: level.info,
 					title: "new user online!",
-					message: (<>
+					message: (
+						<>
 							user <strong>{data.uuid}</strong> connected!
-          </>)
+						</>
+					)
 				});
 			}
+		});
+
+		this.socket.on(events.question, data => {
+			const { question, user } = data;
+			const formatQuestion = string =>
+				string[string.length - 1] !== "?" ? string + "?" : string;
+			this.createNotification({
+				title: `another user asked a question!`,
+				message: (
+					<div>
+						user <strong>{user}</strong> asked "
+						<em>{formatQuestion(question.question)}</em>"
+					</div>
+				)
+			});
 		});
 
 		this.socket.on("user-update", data => {
@@ -84,7 +100,6 @@ class App extends Component {
 				res.data.magic.answer.toLowerCase(),
 				res.data.magic.type.toLowerCase()
 			];
-
 			this.setState({
 				loading: false,
 				answer: { text, type }
@@ -94,6 +109,10 @@ class App extends Component {
 				position: position.top.right,
 				message: res.data.magic.answer,
 				title: "question answered!"
+			});
+			this.socket.emit(events.question, {
+				user: this.socket.uuid,
+				question: { text, type, question }
 			});
 		} catch (e) {
 			this.setState({ loading: false });
@@ -158,6 +177,5 @@ class App extends Component {
 const Title = styled.span`
 	color: white;
 `;
-
 
 export default App;

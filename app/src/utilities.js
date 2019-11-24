@@ -1,9 +1,13 @@
 import io from "socket.io-client";
-import React from 'react';
+import React from "react";
 
-const socket_url = "/";
-const test = window.location;
-console.log('window.location: ' + test)
+const URL = {
+	PROD: "/",
+	DEV: "localhost:8000"
+};
+
+const devEnvironment = (window.location.hostname === "localhost");
+const socket_url = (devEnvironment) ? URL.DEV : URL.PROD;
 
 // notification system utilities
 export const level = {
@@ -27,19 +31,25 @@ export const position = {
 };
 
 const warning = {
-	string: 'it seems like you\'re calling createNotification(notification) without setting any non-default values!',
-	html: (<><br/>it seems like you're calling <strong>createNotification(</strong><i>notification</i><strong>)</strong> without setting any non-default values!</>)
-}
+	string:
+		"it seems like you're calling createNotification(notification) without setting any non-default values!",
+	html: (
+		<>
+			<br />
+			it seems like you're calling <strong>createNotification(</strong>
+			<i>notification</i>
+			<strong>)</strong> without setting any non-default values!
+		</>
+	)
+};
 
 export const defaultConfig = {
 	message: warning.html,
 	title: warning.string,
-	level: level.error,
-	position: position.top.left,
+	level: level.info,
+	position: position.top.right,
 	autoDismiss: 0
-	
 };
-
 
 export function createNotification(system) {
 	return notification => {
@@ -48,6 +58,12 @@ export function createNotification(system) {
 }
 
 // socket.io utilities
+
+export const events = {
+	question: "question",
+	connected: "user-connected"
+};
+
 export const uuidv4 = () => {
 	return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
 		var r = (Math.random() * 16) | 0,
@@ -59,6 +75,7 @@ export const uuidv4 = () => {
 export class Socket {
 	constructor(uuid) {
 		console.log("socket.io: initializing...");
+		console.info("YOU ARE USING THE DEV socket_url VALUE!");
 		this.socket = io.connect(socket_url);
 		this.uuid = uuid || uuidv4();
 		this.eventRegistry = [];
@@ -67,9 +84,14 @@ export class Socket {
 
 	connect() {
 		const { uuid, socket } = this;
-		const ua = navigator.userAgent;
-		socket.emit("user-connected", { uuid, ua });
+		const useragent = navigator.userAgent;
+		socket.emit("user-connected", { uuid, useragent });
 		this._registerHandlers();
+	}
+
+	emit(event, data) {
+		const { socket } = this;
+		socket.emit(event, { ...data });
 	}
 
 	on(identifier, handler) {
