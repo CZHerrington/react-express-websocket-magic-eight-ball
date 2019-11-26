@@ -1,12 +1,14 @@
+require("dotenv").config();
+const { logger, errorlogger } = require("./logger");
 const path = require("path");
 const process = require("process");
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const { logger, errorlogger } = require("./logger");
+const compression = require('compression');
+
 const app = express();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
-const dotenv = require("dotenv").config();
 const MemDB = require("./models/db");
 
 const PORT = process.env.PORT || 8000;
@@ -16,6 +18,7 @@ const ENV = process.env.NODE_ENV || "dev";
 /* initialize server */
 app.use(logger(ENV));
 app.use(errorlogger(ENV));
+app.use(compression())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
