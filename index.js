@@ -1,20 +1,33 @@
 const path = require("path");
+const process = require("process");
 const express = require("express");
+const cookieParser = require("cookie-parser");
+const { logger, errorlogger } = require("./logger");
 const app = express();
 const http = require("http").Server(app);
 const io = require("socket.io")(http);
-const dotenv = require("dotenv").config;
+const dotenv = require("dotenv").config();
 const MemDB = require("./models/db");
 
-const port = process.env.PORT || 8000;
-const appUrl = process.env.APP_URL;
+const PORT = process.env.PORT || 8000;
+const APPURL = process.env.APP_URL;
+const ENV = process.env.NODE_ENV || "dev";
 
-// serve webapp from "/" or "/index.html"
+/* initialize server */
+app.use(logger(ENV));
+app.use(errorlogger(ENV));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.disable("x-powered-by");
+const memDb = new MemDB(io);
+
+/* serve webapp from "/" or "/index.html" */
 app.use("/", express.static(path.join(__dirname, "app/build")));
 
-// set up (very) basic JSON api
+/* set up (very) basic JSON api */
 app.use("/users", (req, res) => {
-  // console.log("[json api]", { users: memDb.store.users });
+  /* console.log("[json api]", { users: memDb.store.users }); */
   res.status(200).json({
     users: memDb.store.users
   });
@@ -22,14 +35,15 @@ app.use("/users", (req, res) => {
 
 app.use("/user/:id", (req, res) => {
   const { id } = req.params;
-  // console.log("[json api]", { id, data: memDb.users });
-  res.status(200).json({
-    id,
-    users: memDb.store.users
-  });
+  const user = memDb.getUser(id);
+
+  if (user) {
+    res.status(200).json({ id, user });
+  } else {
+    res.status(404).send({ id, error: "no user by that id!" });
+  }
 });
 
-let memDb = new MemDB(io);
 io.on("connection", socket => {
   socket.on("user-connected", data => {
     memDb.addUser(data);
@@ -49,6 +63,6 @@ io.on("connection", socket => {
   });
 });
 
-http.listen(port, () => {
-  console.log("listening on *:" + port);
+http.listen(PORT, () => {
+  console.log(__filename + " listening on *:" + PORT);
 });

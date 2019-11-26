@@ -1,5 +1,9 @@
+const path = require('path');
 const morgan = require("morgan");
+const rfs = require("rotating-file-stream");
 const chalk = require("chalk");
+
+const maxFileSize = "2M";
 
 // initialize morgan
 morgan.token("colorful-method", (req, res, arg) => {
@@ -7,27 +11,68 @@ morgan.token("colorful-method", (req, res, arg) => {
   return chalk.white(method);
 });
 morgan.token("colorful-status", (req, res, arg) => {
-    const status = res.statusCode;
-    // get status color
-    const color = (status >= 500 || status === 404) ? "red"
-      : (status >= 400) ? "yellow"
-        : (status >= 300) ? "cyan"
-            : (status >= 200)
-                ? "yellow"
-                : "white"
-    const string = chalk[color](status);
-    String.toString(null);
+  const status = res.statusCode;
+  // get status color
+  const color =
+    status >= 500 || status === 404
+      ? "red"
+      : status >= 400
+      ? "yellow"
+      : status >= 300
+      ? "cyan"
+      : status >= 200
+      ? "yellow"
+      : "white";
+  const string = chalk[color](status);
+  return string;
+});
+
+morgan.token("colorful-error", (req, res, arg) => {
+    const string = chalk.red("[ERROR]")
     return string;
+})
+
+// set up filestreams
+const accessLogStream = rfs.createStream("access.log", {
+  // interval: '1d', // rotate daily
+  size: maxFileSize,
+  path: path.join(__dirname, "log"),
+  compress: true
+});
+
+const errorLogStream = rfs.createStream("error.log", {
+  size: maxFileSize,
+  path: path.join(__dirname, "log"),
+  compress: true
 });
 
 const behaviors = {
-  dev: morgan(":remote-user :colorful-method :url :colorful-status :response-time ms - :res[content-length]"),
-  prod: morgan("combined")
+  all: {
+    dev: morgan(
+      ":remote-user :colorful-method :url :colorful-status :response-time ms - :res[content-length]"
+    ),
+    production: morgan("combined", { stream: accessLogStream })
+  },
+  error: {
+    dev: morgan(
+      ":colorful-error :remote-user :colorful-method :url :colorful-status :response-time ms - :res[content-length]",
+      { skip: (req, res) => res.statusCode < 400 }
+    ),
+    production: morgan("combined", {
+      skip: (req, res) => res.statusCode < 400,
+      stream: errorLogStream
+    })
+  }
 };
 
 function logger(env) {
   const environment = env || process.env.ENVIRONMENT || "dev";
-  return behaviors[environment];
+  return behaviors.all[environment] || behaviors.all["dev"];
 }
 
-module.exports = logger;
+function errorlogger(env) {
+  const environment = env || process.env.ENVIRONMENT || "dev";
+  return behaviors.error[environment] || behaviors.error["dev"];
+}
+
+module.exports = {logger, errorlogger};
