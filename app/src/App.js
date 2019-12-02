@@ -43,18 +43,14 @@ class App extends Component {
 		this.socket = new Socket(uuidv4());
 
 		/* register socket.io event handlers */
-		this.socket.on("user-connected", data => {
+		this.socket.on(events.connected, data => {
 			const { users } = data;
 			this.setState({ users });
-			console.log("[socket.io: event user-connected]", data);
+			console.log(`[socket.io event: ${events.connected}]`, data);
 			if (data.uuid !== this.socket.uuid) {
 				this.createNotification({
 					title: "new user online!",
-					message: (
-						<>
-							user <strong>{data.uuid}</strong> connected!
-						</>
-					)
+					message: (<>user <strong>{data.uuid}</strong> connected!</>)
 				});
 			}
 		});
@@ -66,20 +62,17 @@ class App extends Component {
 					question.question[question.question.length - 1] !== "?"
 						? question.question + "?"
 						: question.question;
+
 				this.createNotification({
 					title: `another user asked a question!`,
-					message: (
-						<div>
-							user <strong>{user}</strong> asked "<em>{questionString}</em>"
-						</div>
-					)
+					message: (<div>user <strong>{user}</strong> asked "<em>{questionString}</em>"</div>)
 				});
 			}
 		});
 
-		this.socket.on("user-update", data => {
+		this.socket.on(events.updated, data => {
 			const { users } = data;
-			console.log("user-update", users);
+			console.log(events.updated, users);
 			this.setState({ users });
 		});
 

@@ -27,20 +27,17 @@ morgan.token("colorful-status", (req, res, arg) => {
   return string;
 });
 
-morgan.token("colorful-error", (req, res, arg) => {
-    const string = chalk.red("[ERROR]")
-    return string;
-})
+morgan.token("colorful-error", (req, res, arg) => chalk.red("[ERROR]"));
 
 // set up filestreams
-const accessLogStream = rfs.createStream("access.log", {
+const accessLogFS = rfs.createStream("access.log", {
   // interval: '1d', // rotate daily
   size: maxFileSize,
   path: path.join(__dirname, "log"),
   compress: true
 });
 
-const errorLogStream = rfs.createStream("error.log", {
+const errorLogFS = rfs.createStream("error.log", {
   size: maxFileSize,
   path: path.join(__dirname, "log"),
   compress: true
@@ -48,20 +45,17 @@ const errorLogStream = rfs.createStream("error.log", {
 
 const behaviors = {
   all: {
-    dev: morgan(
-      ":remote-user :colorful-method :url :colorful-status :response-time ms - :res[content-length]"
-    ),
-    production: morgan("combined", { stream: accessLogStream })
+    dev: morgan(":remote-user :colorful-method :url :colorful-status :response-time ms - :res[content-length]"),
+    production: morgan("combined", { stream: accessLogFS })
   },
   error: {
     dev: morgan(
       ":colorful-error :remote-user :colorful-method :url :colorful-status :response-time ms - :res[content-length]",
       { skip: (req, res) => res.statusCode < 400 }
     ),
-    production: morgan("combined", {
-      skip: (req, res) => res.statusCode < 400,
-      stream: errorLogStream
-    })
+    production: morgan(
+      "combined",
+      { skip: (req, res) => res.statusCode < 400, stream: errorLogFS })
   }
 };
 

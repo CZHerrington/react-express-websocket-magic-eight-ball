@@ -6,8 +6,8 @@ const URL = {
 	DEV: "localhost:8000"
 };
 
-const devEnvironment = (window.location.hostname === "localhost");
-const socket_url = (devEnvironment) ? URL.DEV : URL.PROD;
+const DEV = (window.location.hostname === "localhost");
+const socket_url = (DEV) ? URL.DEV : URL.PROD;
 
 // notification system utilities
 export const level = {
@@ -58,10 +58,10 @@ export function createNotification(system) {
 }
 
 // socket.io utilities
-
 export const events = {
 	question: "question",
-	connected: "user-connected"
+	connected: "user:connected",
+	updated: "user:update"
 };
 
 export const uuidv4 = () => {
@@ -75,7 +75,7 @@ export const uuidv4 = () => {
 export class Socket {
 	constructor(uuid) {
 		console.log("socket.io: initializing...");
-		console.info("YOU ARE USING THE DEV socket_url VALUE!");
+		if (DEV) console.info("YOU ARE USING THE DEV socket_url VALUE!");
 		this.socket = io.connect(socket_url);
 		this.uuid = uuid || uuidv4();
 		this.eventRegistry = [];
@@ -85,7 +85,7 @@ export class Socket {
 	connect() {
 		const { uuid, socket } = this;
 		const useragent = navigator.userAgent;
-		socket.emit("user-connected", { uuid, useragent });
+		socket.emit(events.connected, { uuid, useragent });
 		this._registerHandlers();
 	}
 
